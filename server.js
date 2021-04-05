@@ -22,7 +22,7 @@ _.each(config.accounts, async (accountConfig) => {
     const updatePositions = async () => {
         const account = (await exchange.privateGetAccount()).result
 
-        console.log(account)
+        // console.log(account)
 
         positions = _.map(account.positions, (pos) => {
             // cost = netSize * entryPrice
