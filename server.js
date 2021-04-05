@@ -36,7 +36,10 @@ _.each(config.accounts, async (accountConfig) => {
                 leverage: dollorSize / (+account['collateral'])
             }
         })
-        positions.sort()
+
+        positions = _.sortBy(positions, (pos) => {
+            return pos.market
+        })
     }
 
     await updatePositions()
