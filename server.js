@@ -49,7 +49,7 @@ _.each(config.accounts, async (accountConfig) => {
 
         const output = JSON.stringify({
             positions: positions,
-        })
+        }, null, 2)
         res.send(output)
     })
 })
