@@ -6,6 +6,7 @@ const config = require('./config')
 const app = express()
 const port = 3000
 const updateInterval = 10 * 1000
+const license = 'CC0'
 
 // const sideToInt = (side) => {
 //     return side.toLowerCase() === 'buy' ? 1 : -1
@@ -49,6 +50,7 @@ _.each(config.accounts, async (accountConfig) => {
 
         const output = JSON.stringify({
             positions: positions,
+            license: license,
         }, null, 2)
         res.send(output)
     })
