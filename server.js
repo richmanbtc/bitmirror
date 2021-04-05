@@ -36,6 +36,7 @@ _.each(config.accounts, async (accountConfig) => {
                 leverage: dollorSize / (+account['collateral'])
             }
         })
+        positions.sort()
     }
 
     await updatePositions()
