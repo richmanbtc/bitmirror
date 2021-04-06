@@ -1,6 +1,7 @@
 const express = require('express')
 const _ = require('lodash')
 const ccxt = require('ccxt')
+const logger = require('morgan');
 const config = require('./config')
 
 const app = express()
@@ -11,6 +12,9 @@ const license = 'CC0'
 // const sideToInt = (side) => {
 //     return side.toLowerCase() === 'buy' ? 1 : -1
 // }
+
+app.set('json spaces', 2)
+app.use(logger('dev'))
 
 _.each(config.accounts, async (accountConfig) => {
     const exchange = new ccxt.ftx(_.extend({
@@ -48,15 +52,15 @@ _.each(config.accounts, async (accountConfig) => {
 
         const now = new Date().getTime()
         if (now - lastUpdatedAt > updateInterval) {
-            await updatePositions()
             lastUpdatedAt = now
+            await updatePositions()
         }
 
-        const output = JSON.stringify({
+        res.json({
             positions: positions,
+            timestamp: lastUpdatedAt / 1000,
             license: license,
-        }, null, 2)
-        res.send(output)
+        })
     })
 })
 
