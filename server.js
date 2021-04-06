@@ -94,7 +94,7 @@ app.get('/status', async (req, res) => {
 
 app.get('/', async (req, res) => {
     res.header('Content-Type', 'text/plain;charset=utf-8')
-    res.end(`All data sent from this server is licensed under ${license}.`)
+    res.end(`All data sent from this server is licensed under CC0 (https://creativecommons.org/publicdomain/zero/1.0/legalcode).`)
 })
 
 app.listen(port, () => {
