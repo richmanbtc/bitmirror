@@ -6,7 +6,7 @@ bitmirrorは、仮想通貨取引所のポジションをリアルタイムで�
 
 ## 使い方
 
-config.jsonを編集して、以下のコマンドで起動。
+config.example.jsを参考にconfig.jsを作り、以下のコマンドで起動。
 
 ```bash
 npm start
