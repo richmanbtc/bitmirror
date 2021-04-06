@@ -16,6 +16,23 @@ const license = 'CC0'
 app.set('json spaces', 2)
 app.use(logger('dev'))
 
+let accesses = []
+
+app.use((req, res, next) => {
+    const now = new Date().getTime()
+
+    accesses.push({
+        ip: req.ip,
+        accessedAt: now,
+    })
+
+    accesses = _.filter(accesses, (access) => {
+        return now - access.accessedAt < 24 * 60 * 60 * 1000
+    })
+
+    next()
+});
+
 _.each(config.accounts, async (accountConfig) => {
     const exchange = new ccxt.ftx(_.extend({
         enableRateLimit: true,
@@ -26,6 +43,7 @@ _.each(config.accounts, async (accountConfig) => {
 
     const updatePositions = async () => {
         const account = (await exchange.privateGetAccount()).result
+        const collateral = +account['collateral']
 
         console.log('updatePositions')
         // console.log(account)
@@ -38,7 +56,7 @@ _.each(config.accounts, async (accountConfig) => {
 
             return {
                 market: pos['future'],
-                leverage: dollorSize / (+account['collateral'])
+                leverage: dollorSize / collateral
             }
         })
 
@@ -66,6 +84,18 @@ _.each(config.accounts, async (accountConfig) => {
     })
 })
 
+app.get('/status', async (req, res) => {
+    res.json({
+        accessIn24Hour: accesses.length,
+        uniqueIpIn24Hour: _.uniq(_.map(accesses, 'ip')).length,
+        license: license,
+    })
+})
+
+app.get('/', async (req, res) => {
+    res.header('Content-Type', 'text/plain;charset=utf-8')
+    res.end(`All data sent from this server is licensed under ${license}.`)
+})
 
 app.listen(port, () => {
     console.log(`bitmirror listening at http://localhost:${port}`)
