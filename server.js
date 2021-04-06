@@ -27,6 +27,7 @@ _.each(config.accounts, async (accountConfig) => {
     const updatePositions = async () => {
         const account = (await exchange.privateGetAccount()).result
 
+        console.log('updatePositions')
         // console.log(account)
 
         positions = _.map(account.positions, (pos) => {
@@ -46,15 +47,16 @@ _.each(config.accounts, async (accountConfig) => {
         })
     }
 
-    await updatePositions()
+    let currentPromise = updatePositions()
 
     app.get(`/${accountConfig.id}/positions`, async (req, res) => {
 
         const now = new Date().getTime()
         if (now - lastUpdatedAt > updateInterval) {
             lastUpdatedAt = now
-            await updatePositions()
+            currentPromise = updatePositions()
         }
+        await currentPromise
 
         res.json({
             positions: positions,
