@@ -26,9 +26,11 @@ app.use((req, res, next) => {
         accessedAt: now,
     })
 
-    accesses = _.filter(accesses, (access) => {
-        return now - access.accessedAt < 24 * 60 * 60 * 1000
-    })
+    if (now - accesses[0].accessedAt > 25 * 60 * 60 * 1000) {
+        accesses = _.filter(accesses, (access) => {
+            return now - access.accessedAt < 24 * 60 * 60 * 1000
+        })
+    }
 
     next()
 });
