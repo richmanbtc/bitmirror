@@ -90,6 +90,7 @@ app.get('/status', async (req, res) => {
     res.json({
         accessIn24Hour: accesses.length,
         uniqueIpIn24Hour: _.uniq(_.map(accesses, 'ip')).length,
+        acesssByIpIn24Hour: _.sortBy(_.map(_.countBy(accesses, 'ip')), _.toNumber),
         license: license,
     })
 })
